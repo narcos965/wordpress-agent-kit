@@ -19,6 +19,10 @@ const args = [
   '-czf',
   archive,
   '--exclude=./dist',
+  '--exclude=./.git',
+  '--exclude=./.git/*',
+  '--exclude=./node_modules',
+  '--exclude=./node_modules/*',
   '--exclude=./.DS_Store',
   '--exclude=./*.log',
   '.'

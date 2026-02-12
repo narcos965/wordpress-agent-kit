@@ -2,3 +2,7 @@
 *.log
 dist/
 node_modules/
+.github/skills/
+vendor/wp-agent-skills/
+pnpm-lock.yaml
+package-lock.json

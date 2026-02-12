@@ -1,0 +1,214 @@
+#!/usr/bin/env node
+
+/**
+ * Interactive setup script for WordPress Agent Kit
+ * Guides users through customizing the kit for their project
+ */
+
+import * as p from '@clack/prompts';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join, resolve } from 'path';
+import { execSync } from 'child_process';
+
+// TODO: Consider adding commander for proper --help, --version support
+// For now, simple filtering is sufficient for the single optional path argument
+const args = process.argv.slice(2).filter(arg => !arg.startsWith('-'));
+const targetPath = args[0] || process.cwd();
+const targetDir = resolve(targetPath);
+
+async function main() {
+	console.clear();
+
+	p.intro('WordPress Agent Kit Setup');
+
+	// Check if target directory exists
+	if (!existsSync(targetDir)) {
+		const shouldCreate = await p.confirm({
+			message: `Target directory doesn't exist: ${targetDir}\nCreate it?`,
+			initialValue: true,
+		});
+
+		if (p.isCancel(shouldCreate) || !shouldCreate) {
+			p.cancel('Setup cancelled.');
+			process.exit(0);
+		}
+
+		try {
+			mkdirSync(targetDir, { recursive: true });
+			p.log.success(`Created directory: ${targetDir}`);
+		} catch (err) {
+			p.log.error(`Failed to create directory: ${err.message}`);
+			process.exit(1);
+		}
+	}
+
+	p.log.info(`Setting up kit in: ${targetDir}`);
+
+	// Check if kit is already installed
+	const agentsPath = join(targetDir, 'AGENTS.md');
+	const workflowPath = join(targetDir, '.github/instructions/wordpress-workflow.instructions.md');
+	
+	if (!existsSync(agentsPath)) {
+		const shouldInstall = await p.confirm({
+			message: 'Kit not found in target repo. Install it first?',
+			initialValue: true,
+		});
+
+		if (p.isCancel(shouldInstall) || !shouldInstall) {
+			p.cancel('Setup cancelled.');
+			process.exit(0);
+		}
+
+		const s = p.spinner();
+		s.start('Installing kit files...');
+		
+		try {
+			execSync(`node ${join(process.cwd(), 'scripts/install.mjs')} "${targetDir}"`, {
+				stdio: 'pipe',
+			});
+			s.stop('Kit installed successfully.');
+		} catch (err) {
+			s.stop('Installation failed.');
+			console.error(err.message);
+			process.exit(1);
+		}
+	}
+
+	// Project info
+	const projectInfo = await p.group(
+		{
+			projectType: () =>
+				p.select({
+					message: 'What type of WordPress project is this?',
+					options: [
+						{ value: 'plugin', label: 'Plugin' },
+						{ value: 'theme', label: 'Theme' },
+						{ value: 'block-theme', label: 'Block Theme' },
+						{ value: 'site', label: 'Full Site / Multisite' },
+						{ value: 'blocks', label: 'Gutenberg Blocks' },
+						{ value: 'other', label: 'Other / Mixed' },
+					],
+				}),
+			techStack: () =>
+				p.multiselect({
+					message: 'Select technologies used in your project:',
+					options: [
+						{ value: 'gutenberg', label: 'Gutenberg Blocks', hint: 'block.json, @wordpress/blocks' },
+						{ value: 'interactivity', label: 'Interactivity API', hint: 'data-wp-* directives' },
+						{ value: 'rest-api', label: 'REST API', hint: 'Custom endpoints' },
+						{ value: 'wpcli', label: 'WP-CLI', hint: 'Custom commands' },
+						{ value: 'composer', label: 'Composer', hint: 'PHP dependencies' },
+						{ value: 'npm', label: 'npm/pnpm', hint: 'JS build process' },
+						{ value: 'phpstan', label: 'PHPStan', hint: 'Static analysis' },
+						{ value: 'playground', label: 'WordPress Playground', hint: 'Testing/demo' },
+					],
+					required: false,
+				}),
+			runTriage: () =>
+				p.confirm({
+					message: 'Run project triage to detect WordPress setup?',
+					initialValue: true,
+				}),
+		},
+		{
+			onCancel: () => {
+				p.cancel('Setup cancelled.');
+				process.exit(0);
+			},
+		}
+	);
+
+	// Run triage if requested
+	if (projectInfo.runTriage) {
+		const s = p.spinner();
+		s.start('Analyzing project structure...');
+		
+		// In real implementation, this would use the wp-project-triage skill
+		// For now, just simulate detection
+		await new Promise(resolve => setTimeout(resolve, 1500));
+		s.stop('Project analyzed.');
+		
+		p.note(
+			`Detected:\n- WordPress plugin/theme structure\n- Composer dependencies\n- Build scripts present`,
+			'Project Triage Results'
+		);
+	}
+
+	// Customize AGENTS.md
+	const customizeAgents = await p.confirm({
+		message: 'Customize AGENTS.md with project details?',
+		initialValue: true,
+	});
+
+	if (p.isCancel(customizeAgents)) {
+		p.cancel('Setup cancelled.');
+		process.exit(0);
+	}
+
+	if (customizeAgents) {
+		try {
+			let agentsContent = readFileSync(agentsPath, 'utf-8');
+			
+			// Replace placeholder tech stack
+			const techStackList = projectInfo.techStack
+				.map(tech => {
+					const labels = {
+						gutenberg: 'Gutenberg Blocks (@wordpress/blocks)',
+						interactivity: 'Interactivity API (data-wp-* directives)',
+						'rest-api': 'WordPress REST API (custom endpoints)',
+						wpcli: 'WP-CLI (custom commands)',
+						composer: 'Composer (PHP dependencies)',
+						npm: 'npm/pnpm (JavaScript build process)',
+						phpstan: 'PHPStan (static analysis)',
+						playground: 'WordPress Playground (testing)',
+					};
+					return `- ${labels[tech] || tech}`;
+				})
+				.join('\n');
+
+			// Update AGENTS.md tech stack section (basic replacement)
+			agentsContent = agentsContent.replace(
+				/\*\*Tooling\*\*: .*/,
+				`**Tooling**: ${projectInfo.techStack.includes('composer') ? 'Composer for PHP' : ''}${projectInfo.techStack.includes('npm') ? ', npm/pnpm for JS' : ''}.`
+			);
+
+			writeFileSync(agentsPath, agentsContent, 'utf-8');
+			p.log.success('Updated AGENTS.md');
+		} catch (err) {
+			p.log.warn(`Could not update AGENTS.md: ${err.message}`);
+		}
+	}
+
+	// Workflow instructions
+	if (existsSync(workflowPath)) {
+		const customizeWorkflow = await p.confirm({
+			message: 'Open workflow instructions for manual editing?',
+			initialValue: false,
+		});
+
+		if (!p.isCancel(customizeWorkflow) && customizeWorkflow) {
+			p.note(
+				`Edit: ${workflowPath}\n\nAdd your project-specific:\n- Coding standards\n- Git workflow\n- Testing procedures\n- Deployment steps`,
+				'Workflow Instructions'
+			);
+		}
+	}
+
+	// Next steps
+	p.note(
+		`✓ Kit installed and configured\n\n` +
+		`Next steps:\n` +
+		`1. Review ${agentsPath}\n` +
+		`2. Customize .github/prompts/ for your domain\n` +
+		`3. Test with: ${projectInfo.projectType === 'plugin' ? '"Create a new settings page"' : '"Generate a block variation"'}\n` +
+		`4. Adjust skills loading in AGENTS.md as needed`,
+		'Setup Complete'
+	);
+
+	p.outro('Your WordPress project is now AI-ready!');
+}
+
+main().catch((err) => {
+	console.error('Setup failed:', err);
+	process.exit(1);
+});

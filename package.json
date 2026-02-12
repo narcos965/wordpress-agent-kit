@@ -1,14 +1,30 @@
 {
   "name": "wordpress-agent-kit",
-  "private": true,
+  "version": "0.1.0",
+  "description": "WordPress-focused AGENTS.md + Agent Skills starter kit for AI coding agents.",
+  "license": "GPL-2.0-or-later",
+  "private": false,
   "type": "module",
+  "homepage": "https://agents.md/",
+  "keywords": [
+    "wordpress",
+    "agents",
+    "agents-md",
+    "agent-skills",
+    "ai-coding",
+    "copilot"
+  ],
   "engines": {
     "node": ">=20.18"
   },
   "scripts": {
     "install:kit": "node scripts/install.mjs",
     "sync:skills": "node scripts/sync-skills.mjs",
+    "setup": "node scripts/setup.mjs .",
     "playground": "node scripts/run-playground.mjs",
     "build:release": "node scripts/build-release.mjs"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.8.2"
   }
 }
