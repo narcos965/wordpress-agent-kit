@@ -1,0 +1,14 @@
+{
+  "name": "wordpress-agent-kit",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.18"
+  },
+  "scripts": {
+    "install:kit": "node scripts/install.mjs",
+    "sync:skills": "node scripts/sync-skills.mjs",
+    "playground": "node scripts/run-playground.mjs",
+    "build:release": "node scripts/build-release.mjs"
+  }
+}
