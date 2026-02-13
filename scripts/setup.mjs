@@ -8,8 +8,9 @@
 import * as p from '@clack/prompts';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
-import { execSync, spawnSync } from 'child_process';
+import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { mapProjectType, mapTechStack, hasConfidentDetection, formatDetectionResults } from './lib/triage-mapper.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -34,22 +35,6 @@ for (let i = 0; i < argv.length; i++) {
 
 targetPath = targetPath || process.cwd();
 const targetDir = resolve(targetPath);
-
-function detectProject(target) {
-	const scriptPath = resolve(__dirname, '../vendor/wp-agent-skills/skills/wp-project-triage/scripts/detect_wp_project.mjs');
-	if (!existsSync(scriptPath)) return null;
-
-	try {
-		const result = spawnSync('node', [scriptPath, target], { encoding: 'utf-8' });
-		if (result.status === 0 && result.stdout) {
-			const json = result.stdout.trim().split('\n').pop(); // JSON is last line
-			return JSON.parse(json);
-		}
-	} catch (e) {
-		// console.error(e);
-	}
-	return null;
-}
 
 async function main() {
 	console.clear();
@@ -109,95 +94,131 @@ async function main() {
 		}
 	}
 
-	// Project info
-	const projectInfo = await p.group(
-		{
-			projectType: () =>
-				p.select({
-					message: 'What type of WordPress project is this?',
-					options: [
-						{ value: 'plugin', label: 'Plugin' },
-						{ value: 'theme', label: 'Theme' },
-						{ value: 'block-theme', label: 'Block Theme' },
-						{ value: 'site', label: 'Full Site / Multisite' },
-						{ value: 'blocks', label: 'Gutenberg Blocks' },
-						{ value: 'other', label: 'Other / Mixed' },
-					],
-				}),
-			techStack: () =>
-				p.multiselect({
-					message: 'Select technologies used in your project:',
-					options: [
-						{ value: 'not-sure', label: 'Not sure (Auto-detect)', hint: 'Analyzes project files' },
-						{ value: 'gutenberg', label: 'Gutenberg Blocks', hint: 'block.json, @wordpress/blocks' },
-						{ value: 'interactivity', label: 'Interactivity API', hint: 'data-wp-* directives' },
-						{ value: 'rest-api', label: 'REST API', hint: 'Custom endpoints' },
-						{ value: 'wpcli', label: 'WP-CLI', hint: 'Custom commands' },
-						{ value: 'composer', label: 'Composer', hint: 'PHP dependencies' },
-						{ value: 'npm', label: 'npm/pnpm', hint: 'JS build process' },
-						{ value: 'phpstan', label: 'PHPStan', hint: 'Static analysis' },
-						{ value: 'playground', label: 'WordPress Playground', hint: 'Testing/demo' },
-					],
-					required: false,
-				}),
-			runTriage: () =>
-				p.confirm({
-					message: 'Run project triage to detect WordPress setup?',
-					initialValue: true,
-				}),
-		},
-		{
-			onCancel: () => {
-				p.cancel('Setup cancelled.');
-				process.exit(0);
-			},
-		}
-	);
-
-	// Run triage if requested
-	let detectedPackageManager = 'npm/pnpm';
-
-	if (projectInfo.runTriage || projectInfo.techStack.includes('not-sure')) {
+	// Run project triage BEFORE asking any questions
+	let triageResult = null;
+	let detectedType = null;
+	let detectedTech = [];
+	
+	// Try to find triage script in multiple locations
+	const triageScriptPaths = [
+		join(targetDir, '.github/skills/wp-project-triage/scripts/detect_wp_project.mjs'),
+		join(process.cwd(), '.github/skills/wp-project-triage/scripts/detect_wp_project.mjs'),
+		resolve(__dirname, '../vendor/wp-agent-skills/skills/wp-project-triage/scripts/detect_wp_project.mjs'),
+	];
+	
+	const triageScriptPath = triageScriptPaths.find(path => existsSync(path));
+	
+	if (triageScriptPath) {
 		const s = p.spinner();
 		s.start('Analyzing project structure...');
 		
-		const report = detectProject(targetDir);
-		s.stop('Project analyzed.');
+		try {
+			const triageOutput = execSync(`node "${triageScriptPath}" "${targetDir}"`, {
+				stdio: 'pipe',
+				encoding: 'utf-8',
+			});
+			
+			triageResult = JSON.parse(triageOutput);
+			detectedType = mapProjectType(triageResult.project?.primary);
+			detectedTech = mapTechStack(triageResult);
+			
+			s.stop('Project analyzed.');
+		} catch (err) {
+			s.stop('Auto-detection unavailable.');
+			p.log.warn('Could not run project triage. Proceeding with manual setup.');
+		}
+	} else {
+		p.log.info('Project triage not available yet. Using manual setup.');
+	}
+
+	// Capture package manager from triage if available, for use in AGENTS.md generation later
+	let detectedPackageManager = 'npm/pnpm';
+	if (triageResult && triageResult.tooling?.node?.packageManager) {
+		detectedPackageManager = triageResult.tooling.node.packageManager;
+	}
+
+	// Show detection results and ask for confirmation if confident
+	let useDetectedValues = false;
+	
+	if (triageResult && hasConfidentDetection(detectedType, detectedTech)) {
+		p.note(formatDetectionResults(detectedType, detectedTech, triageResult), 'Auto-Detection Results');
 		
-		if (report) {
-			const { signals = {}, tooling = {} } = report;
-			if (tooling.node?.packageManager) detectedPackageManager = tooling.node.packageManager;
+		const confirmDetection = await p.confirm({
+			message: 'Use these detected values?',
+			initialValue: true,
+		});
+		
+		if (p.isCancel(confirmDetection)) {
+			p.cancel('Setup cancelled.');
+			process.exit(0);
+		}
+		
+		useDetectedValues = confirmDetection;
+	} else if (triageResult) {
+		// Partial detection - will be used as defaults
+		if (detectedType || detectedTech.length > 0) {
+			p.note(formatDetectionResults(detectedType, detectedTech, triageResult), 'Partial Detection (will be used as defaults)');
+		}
+	}
 
-			const detectedStack = [];
-
-			if (signals.isBlockPlugin || signals.isBlockTheme || tooling.node?.usesWordpressScripts || signals.blockJsonFiles?.length) detectedStack.push('gutenberg');
-			if (signals.usesInteractivityApi) detectedStack.push('interactivity');
-			if (signals.usesWpCli) detectedStack.push('wpcli');
-			if (tooling.php?.hasComposerJson) detectedStack.push('composer');
-			if (tooling.node?.hasPackageJson) detectedStack.push('npm');
-			
-			// REST API and PHPStan signals aren't explicit in triage output yet, implying manual selection
-			
-			// Merge detected
-			const userStack = projectInfo.techStack.filter(v => v !== 'not-sure');
-			projectInfo.techStack = [...new Set([...userStack, ...detectedStack])];
-
-			p.note(
-				`Detected:\n` +
-				`- Type: ${report.project?.primary || 'unknown'}\n` +
-				`- Stack: ${detectedStack.join(', ') || 'None specific'}\n` +
-				`- Package Manager: ${tooling.node?.packageManager || 'npm'}`,
-				'Project Triage Results'
-			);
-
-            // Refine project type if detected
-            if (report.project?.primary && projectInfo.projectType === 'other') {
-                // If user said 'other' or maybe we strictly override? 
-                // Let's just note it for now as the prompt is already done.
-            }
-		} else {
-             p.log.warn('Could not run detection tool.');
-        }
+	// Project info
+	let projectInfo;
+	
+	if (useDetectedValues) {
+		// Skip questions, use detected values
+		projectInfo = {
+			projectType: detectedType,
+			techStack: detectedTech,
+		};
+		p.log.success('Using auto-detected configuration.');
+	} else {
+		// Ask questions with detected values as defaults
+		projectInfo = await p.group(
+			{
+				projectType: () =>
+					p.select({
+						message: 'What type of WordPress project is this?',
+						options: [
+							{ value: 'plugin', label: 'Plugin' },
+							{ value: 'theme', label: 'Theme' },
+							{ value: 'block-theme', label: 'Block Theme' },
+							{ value: 'site', label: 'Full Site / Multisite' },
+							{ value: 'blocks', label: 'Gutenberg Blocks' },
+							{ value: 'other', label: 'Other / Mixed' },
+							{ value: 'unsure', label: "I'm not sure" },
+						],
+						initialValue: detectedType || undefined,
+					}),
+				techStack: () =>
+					p.multiselect({
+						message: 'Select technologies (or skip if unsure):',
+						options: [
+							{ value: 'gutenberg', label: 'Gutenberg Blocks', hint: 'block.json, @wordpress/blocks' },
+							{ value: 'interactivity', label: 'Interactivity API', hint: 'data-wp-* directives' },
+							{ value: 'rest-api', label: 'REST API', hint: 'Custom endpoints' },
+							{ value: 'wpcli', label: 'WP-CLI', hint: 'Custom commands' },
+							{ value: 'composer', label: 'Composer', hint: 'PHP dependencies' },
+							{ value: 'npm', label: 'npm/pnpm', hint: 'JS build process' },
+							{ value: 'phpstan', label: 'PHPStan', hint: 'Static analysis' },
+							{ value: 'playground', label: 'WordPress Playground', hint: 'Testing/demo' },
+						],
+						initialValues: detectedTech.length > 0 ? detectedTech : undefined,
+						required: false,
+					}),
+			},
+			{
+				onCancel: () => {
+					p.cancel('Setup cancelled.');
+					process.exit(0);
+				},
+			}
+		);
+		
+		// Handle "I'm not sure" selection
+		if (projectInfo.projectType === 'unsure') {
+			projectInfo.projectType = 'other';
+			p.log.info('Using "other" as project type. You can adjust AGENTS.md later.');
+		}
 	}
 
 	// Customize AGENTS.md
