@@ -99,6 +99,7 @@ async function main() {
 	let detectedType = null;
 	let detectedTech = [];
 	
+<<<<<<< HEAD
 	// Try to find triage script in multiple locations
 	const triageScriptPaths = [
 		join(targetDir, '.github/skills/wp-project-triage/scripts/detect_wp_project.mjs'),
@@ -113,14 +114,18 @@ async function main() {
 		s.start('Analyzing project structure...');
 		
 		try {
-			const triageOutput = execSync(`node "${triageScriptPath}" "${targetDir}"`, {
-				stdio: 'pipe',
+			// Use spawnSync with cwd set to target directory
+			// The triage script uses process.cwd() as repoRoot
+			const result = spawnSync('node', [triageScriptPath], {
+				cwd: targetDir,
 				encoding: 'utf-8',
 			});
 			
-			triageResult = JSON.parse(triageOutput);
-			detectedType = mapProjectType(triageResult.project?.primary);
-			detectedTech = mapTechStack(triageResult);
+			if (result.status === 0 && result.stdout) {
+				triageResult = JSON.parse(result.stdout.trim());
+				detectedType = mapProjectType(triageResult.project?.primary);
+				detectedTech = mapTechStack(triageResult);
+			}
 			
 			s.stop('Project analyzed.');
 		} catch (err) {
