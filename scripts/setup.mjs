@@ -7,14 +7,49 @@
 
 import * as p from '@clack/prompts';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join, resolve } from 'path';
-import { execSync } from 'child_process';
+import { join, resolve, dirname } from 'path';
+import { execSync, spawnSync } from 'child_process';
+import { fileURLToPath } from 'url';
 
-// TODO: Consider adding commander for proper --help, --version support
-// For now, simple filtering is sufficient for the single optional path argument
-const args = process.argv.slice(2).filter(arg => !arg.startsWith('-'));
-const targetPath = args[0] || process.cwd();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Parse arguments manually to support --dir flag and positional argument
+const argv = process.argv.slice(2);
+let targetPath = null;
+
+for (let i = 0; i < argv.length; i++) {
+	const arg = argv[i];
+	if (arg.startsWith('--dir=')) {
+		targetPath = arg.slice(6);
+	} else if (arg === '--dir') {
+		if (argv[i + 1]) {
+			targetPath = argv[i + 1];
+			i++;
+		}
+	} else if (!arg.startsWith('-') && !targetPath) {
+		targetPath = arg;
+	}
+}
+
+targetPath = targetPath || process.cwd();
 const targetDir = resolve(targetPath);
+
+function detectProject(target) {
+	const scriptPath = resolve(__dirname, '../vendor/wp-agent-skills/skills/wp-project-triage/scripts/detect_wp_project.mjs');
+	if (!existsSync(scriptPath)) return null;
+
+	try {
+		const result = spawnSync('node', [scriptPath, target], { encoding: 'utf-8' });
+		if (result.status === 0 && result.stdout) {
+			const json = result.stdout.trim().split('\n').pop(); // JSON is last line
+			return JSON.parse(json);
+		}
+	} catch (e) {
+		// console.error(e);
+	}
+	return null;
+}
 
 async function main() {
 	console.clear();
@@ -93,6 +128,7 @@ async function main() {
 				p.multiselect({
 					message: 'Select technologies used in your project:',
 					options: [
+						{ value: 'not-sure', label: 'Not sure (Auto-detect)', hint: 'Analyzes project files' },
 						{ value: 'gutenberg', label: 'Gutenberg Blocks', hint: 'block.json, @wordpress/blocks' },
 						{ value: 'interactivity', label: 'Interactivity API', hint: 'data-wp-* directives' },
 						{ value: 'rest-api', label: 'REST API', hint: 'Custom endpoints' },
@@ -119,19 +155,49 @@ async function main() {
 	);
 
 	// Run triage if requested
-	if (projectInfo.runTriage) {
+	let detectedPackageManager = 'npm/pnpm';
+
+	if (projectInfo.runTriage || projectInfo.techStack.includes('not-sure')) {
 		const s = p.spinner();
 		s.start('Analyzing project structure...');
 		
-		// In real implementation, this would use the wp-project-triage skill
-		// For now, just simulate detection
-		await new Promise(resolve => setTimeout(resolve, 1500));
+		const report = detectProject(targetDir);
 		s.stop('Project analyzed.');
 		
-		p.note(
-			`Detected:\n- WordPress plugin/theme structure\n- Composer dependencies\n- Build scripts present`,
-			'Project Triage Results'
-		);
+		if (report) {
+			const { signals = {}, tooling = {} } = report;
+			if (tooling.node?.packageManager) detectedPackageManager = tooling.node.packageManager;
+
+			const detectedStack = [];
+
+			if (signals.isBlockPlugin || signals.isBlockTheme || tooling.node?.usesWordpressScripts || signals.blockJsonFiles?.length) detectedStack.push('gutenberg');
+			if (signals.usesInteractivityApi) detectedStack.push('interactivity');
+			if (signals.usesWpCli) detectedStack.push('wpcli');
+			if (tooling.php?.hasComposerJson) detectedStack.push('composer');
+			if (tooling.node?.hasPackageJson) detectedStack.push('npm');
+			
+			// REST API and PHPStan signals aren't explicit in triage output yet, implying manual selection
+			
+			// Merge detected
+			const userStack = projectInfo.techStack.filter(v => v !== 'not-sure');
+			projectInfo.techStack = [...new Set([...userStack, ...detectedStack])];
+
+			p.note(
+				`Detected:\n` +
+				`- Type: ${report.project?.primary || 'unknown'}\n` +
+				`- Stack: ${detectedStack.join(', ') || 'None specific'}\n` +
+				`- Package Manager: ${tooling.node?.packageManager || 'npm'}`,
+				'Project Triage Results'
+			);
+
+            // Refine project type if detected
+            if (report.project?.primary && projectInfo.projectType === 'other') {
+                // If user said 'other' or maybe we strictly override? 
+                // Let's just note it for now as the prompt is already done.
+            }
+		} else {
+             p.log.warn('Could not run detection tool.');
+        }
 	}
 
 	// Customize AGENTS.md
@@ -169,7 +235,7 @@ async function main() {
 			// Update AGENTS.md tech stack section (basic replacement)
 			agentsContent = agentsContent.replace(
 				/\*\*Tooling\*\*: .*/,
-				`**Tooling**: ${projectInfo.techStack.includes('composer') ? 'Composer for PHP' : ''}${projectInfo.techStack.includes('npm') ? ', npm/pnpm for JS' : ''}.`
+				`**Tooling**: ${projectInfo.techStack.includes('composer') ? 'Composer for PHP' : ''}${projectInfo.techStack.includes('npm') ? `, ${detectedPackageManager} for JS` : ''}.`
 			);
 
 			writeFileSync(agentsPath, agentsContent, 'utf-8');

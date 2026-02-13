@@ -6,7 +6,26 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const srcDir = path.resolve(__dirname, '..');
-const destDir = path.resolve(process.argv[2] || process.cwd());
+
+// Parse arguments to support --dir flag and positional argument
+const argv = process.argv.slice(2);
+let targetPath = null;
+
+for (let i = 0; i < argv.length; i++) {
+  const arg = argv[i];
+  if (arg.startsWith('--dir=')) {
+    targetPath = arg.slice(6);
+  } else if (arg === '--dir') {
+    if (argv[i + 1]) {
+      targetPath = argv[i + 1];
+      i++;
+    }
+  } else if (!arg.startsWith('-') && !targetPath) {
+    targetPath = arg;
+  }
+}
+
+const destDir = path.resolve(targetPath || process.cwd());
 
 fs.mkdirSync(destDir, { recursive: true });
 
