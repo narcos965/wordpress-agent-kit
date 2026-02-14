@@ -8,7 +8,7 @@
 import * as p from '@clack/prompts';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
-import { execSync } from 'child_process';
+import { execSync, spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { mapProjectType, mapTechStack, hasConfidentDetection, formatDetectionResults } from './lib/triage-mapper.mjs';
 
@@ -99,7 +99,6 @@ async function main() {
 	let detectedType = null;
 	let detectedTech = [];
 	
-<<<<<<< HEAD
 	// Try to find triage script in multiple locations
 	const triageScriptPaths = [
 		join(targetDir, '.github/skills/wp-project-triage/scripts/detect_wp_project.mjs'),
