@@ -7,8 +7,8 @@
  * @param {string} primary - The primary project type from triage
  * @returns {string|null} - Mapped project type or null
  */
-export function mapProjectType(primary) {
-	const typeMap = {
+export function mapProjectType(primary: string): string | null {
+	const typeMap: Record<string, string | null> = {
 		'wp-block-theme': 'block-theme',
 		'wp-block-plugin': 'blocks',
 		'wp-plugin': 'plugin',
@@ -28,8 +28,8 @@ export function mapProjectType(primary) {
  * @param {object} triageResult - Full triage result object
  * @returns {string[]} - Array of tech stack values
  */
-export function mapTechStack(triageResult) {
-	const techStack = [];
+export function mapTechStack(triageResult: any): string[] {
+	const techStack: string[] = [];
 	const { signals, tooling } = triageResult;
 	
 	// Map signals
@@ -76,7 +76,7 @@ export function mapTechStack(triageResult) {
  * @param {string[]} detectedTech - Detected tech stack
  * @returns {boolean} - True if confident enough
  */
-export function hasConfidentDetection(detectedType, detectedTech) {
+export function hasConfidentDetection(detectedType: string | null, detectedTech: string[]): boolean {
 	return detectedType !== null && detectedType !== 'other';
 }
 
@@ -87,8 +87,8 @@ export function hasConfidentDetection(detectedType, detectedTech) {
  * @param {object} triageResult - Full triage result for additional notes
  * @returns {string} - Formatted string for display
  */
-export function formatDetectionResults(detectedType, detectedTech, triageResult) {
-	const typeLabels = {
+export function formatDetectionResults(detectedType: string | null, detectedTech: string[], triageResult: any): string {
+	const typeLabels: Record<string, string> = {
 		'plugin': 'WordPress Plugin',
 		'theme': 'WordPress Theme',
 		'block-theme': 'Block Theme',
@@ -97,41 +97,19 @@ export function formatDetectionResults(detectedType, detectedTech, triageResult)
 		'other': 'Other / Mixed',
 	};
 	
-	const techLabels = {
-		'gutenberg': 'Gutenberg Blocks',
-		'interactivity': 'Interactivity API',
-		'rest-api': 'REST API',
-		'wpcli': 'WP-CLI',
-		'composer': 'Composer',
-		'npm': 'npm/pnpm',
-		'phpstan': 'PHPStan',
-		'playground': 'WordPress Playground',
-	};
-	
-	let result = 'Detected project:\n';
-	
-	if (detectedType) {
-		result += `  Type: ${typeLabels[detectedType] || detectedType}\n`;
-	} else {
-		result += `  Type: Could not determine\n`;
-	}
-	
-	if (detectedTech.length > 0) {
-		result += `\nDetected technologies:\n`;
-		detectedTech.forEach(tech => {
-			result += `  • ${techLabels[tech] || tech}\n`;
-		});
-	} else {
-		result += `\nTechnologies: None detected\n`;
-	}
-	
-	// Add any notes from triage
-	if (triageResult.project?.notes?.length > 0) {
-		result += `\nNotes:\n`;
-		triageResult.project.notes.forEach(note => {
-			result += `  • ${note}\n`;
-		});
-	}
-	
-	return result.trim();
+	const techLabels: Record<string, string> = {
+        'gutenberg': 'Blocks',
+        'interactivity': 'Interactivity API',
+        'wpcli': 'WP-CLI',
+        'rest-api': 'REST API',
+        'composer': 'Composer',
+        'phpstan': 'PHPStan',
+        'npm': 'npm/package.json',
+        'playground': 'Playground',
+    };
+
+    const typeLabel = detectedType ? typeLabels[detectedType] : 'Unknown';
+    const techList = detectedTech.map(t => techLabels[t] || t).join(', ');
+
+    return `Project Type: ${typeLabel}\nTech Stack: ${techList}`;
 }
