@@ -186,4 +186,4 @@ npm run setup
 - [x] Test on multiple project types
 - [x] Document new behavior in README
 - [x] Optional: Create lib/triage-mapper.mjs module for clean separation
-- [ ] Optional: Create lib/agents-generator.mjs for template-based AGENTS.md generation
+- [x] Optional: Create lib/agents-generator.mjs for template-based AGENTS.md generation
