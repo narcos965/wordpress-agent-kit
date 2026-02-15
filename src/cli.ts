@@ -5,6 +5,7 @@ import { installCommand } from './commands/install.js';
 import { setupCommand } from './commands/setup.js';
 import { syncSkillsCommand } from './commands/sync-skills.js';
 import { runPlaygroundCommand } from './commands/run-playground.js';
+import { buildReleaseCommand } from './commands/build-release.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json');
@@ -20,5 +21,6 @@ program.addCommand(installCommand);
 program.addCommand(setupCommand);
 program.addCommand(syncSkillsCommand);
 program.addCommand(runPlaygroundCommand);
+program.addCommand(buildReleaseCommand);
 
 program.parse(process.argv);

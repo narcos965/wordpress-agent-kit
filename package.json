@@ -20,29 +20,30 @@
     "wp-agent-kit": "./dist/cli.js"
   },
   "scripts": {
-    "dev": "node --loader ts-node/esm src/cli.ts",
+    "dev": "tsx src/cli.ts",
     "build": "tsc",
     "check": "tsc --noEmit",
     "lint": "eslint src/ --fix",
     "test": "vitest",
-    "install:kit": "node --loader ts-node/esm src/cli.ts install",
-    "sync:skills": "node --loader ts-node/esm src/cli.ts sync-skills",
-    "setup": "node --loader ts-node/esm src/cli.ts setup",
-    "playground": "node --loader ts-node/esm src/cli.ts playground",
-    "build:release": "node scripts/build-release.mjs"
+    "install:kit": "tsx src/cli.ts install",
+    "sync:skills": "tsx src/cli.ts sync-skills",
+    "setup": "tsx src/cli.ts setup",
+    "playground": "tsx src/cli.ts playground",
+    "build:release": "tsx src/cli.ts build-release"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.2",
-    "commander": "^14.0.0"
+    "commander": "^13.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^25.0.0",
-    "eslint": "^9.0.0",
-    "prettier": "^3.0.0",
-    "ts-node": "^10.9.0",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.55.0",
-    "vitest": "^4.0.0"
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.1",
+    "eslint": "^9.16.0",
+    "prettier": "^3.4.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8"
   }
 }
