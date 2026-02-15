@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import fs from 'node:fs';
 import path from 'node:path';
-import { run } from '../utils/run';
+import { run } from '../utils/run.js';
 
 const OFFICIAL_SKILLS_REPO_URL = 'https://github.com/WordPress/agent-skills.git';
 const DEFAULT_SKILLS_REF = 'trunk';

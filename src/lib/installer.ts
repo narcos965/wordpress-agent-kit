@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { PACKAGE_ROOT } from '../utils/paths';
+import { PACKAGE_ROOT } from '../utils/paths.js';
 
 export async function installKit(targetDir: string) {
     console.log(`Installing WordPress Agent Kit into: ${targetDir}`);

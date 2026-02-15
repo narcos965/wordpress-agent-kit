@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { PACKAGE_ROOT } from '../utils/paths';
+import { PACKAGE_ROOT } from '../utils/paths.js';
 
 export const runPlaygroundCommand = new Command('playground')
   .description('Run local WordPress Playground')

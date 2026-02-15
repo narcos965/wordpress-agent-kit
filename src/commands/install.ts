@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import path from 'node:path';
-import { installKit } from '../lib/installer';
+import { installKit } from '../lib/installer.js';
 
 export const installCommand = new Command('install')
   .description('Install the WordPress Agent Kit into a target directory')
