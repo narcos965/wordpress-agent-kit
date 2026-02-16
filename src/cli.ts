@@ -20,5 +20,4 @@ program.addCommand(installCommand);
 program.addCommand(setupCommand);
 program.addCommand(syncSkillsCommand);
 program.addCommand(runPlaygroundCommand);
-program.addCommand(buildReleaseCommand);
 program.parse(process.argv);
