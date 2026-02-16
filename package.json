@@ -31,7 +31,7 @@
     "sync:skills": "tsx src/cli.ts sync-skills",
     "setup": "tsx src/cli.ts setup",
     "playground": "tsx src/cli.ts playground",
-    "build:release": "tsx scripts/build-release.ts"
+    "build:bundles": "tsx scripts/build-bundles.ts"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.2",

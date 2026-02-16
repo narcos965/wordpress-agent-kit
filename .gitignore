@@ -6,3 +6,9 @@ node_modules/
 vendor/wp-agent-skills/
 pnpm-lock.yaml
 package-lock.json
+
+# Personal development prompts (not for distribution)
+.github/prompts/
+
+# Personal development settings (not for distribution)
+.vscode/

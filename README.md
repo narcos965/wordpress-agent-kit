@@ -1,36 +1,45 @@
 # WordPress Agent Kit
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/Written%20in-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue?style=flat-square)](package.json)
+
 **WordPress-focused AI agent starter kit** for GitHub Copilot, Claude, and other LLM coding agents. Includes instructions, specialized WordPress skills, and workflow automation aligned with industry standards.
 
 Maintained by [Kyle Brodeur](https://brodeur.me).
 
 ## Quick Start
 
-**1. Clone or fork this repository:**
+### Option 1: CLI (Recommended)
+
+Run the interactive setup wizard:
 
 ```bash
-# Clone
-git clone https://github.com/kylebrodeur/wordpress-agent-kit.git
-cd wordpress-agent-kit
+npx wp-agent-kit setup
+# or
+pnpm dlx wp-agent-kit setup
 ```
 
-**2. Sync the latest WordPress skills:**
+This will:
+- Detect your WordPress project type
+- Install `AGENTS.md` and skills into your project
+- Configure for your tech stack
+
+### Option 2: Pre-built Bundles
+
+Download a bundle from the [latest release](https://github.com/kylebrodeur/wordpress-agent-kit/releases):
+
+- **`wordpress-agent-kit-github.tar.gz`** - For GitHub Copilot
+- **`wordpress-agent-kit-claude.tar.gz`** - For Claude
+- **`wordpress-agent-kit-agent.tar.gz`** - For generic `.agent` workflows
+- **`wordpress-agent-kit-cursor.tar.gz`** - For Cursor IDE
+
+Extract into your WordPress project root:
 
 ```bash
-pnpm install
-pnpm sync:skills
-```
-
-**3. Install into your WordPress project:**
-
-```bash
-pnpm install:kit -- /path/to/your-wp-project
-```
-
-**4. Personalize for your project:**
-
-```bash
-pnpm setup -- /path/to/your-wp-project
+cd /path/to/your-wordpress-project
+tar -xzf wordpress-agent-kit-github.tar.gz
 ```
 
 This interactive setup helps you:
@@ -67,24 +76,29 @@ The setup will analyze your project first and either:
 
 This project uses a TypeScript-based CLI for all operations.
 
-### Clean Build
+### Build CLI
 
 ```bash
 pnpm build
 ```
 
+### Build Release Bundles
+
+```bash
+pnpm sync:skills  # Sync latest WordPress skills first
+pnpm build:bundles
+```
+
+This generates four platform-specific bundles in `dist/bundles/`:
+- `wordpress-agent-kit-github.tar.gz`
+- `wordpress-agent-kit-claude.tar.gz`
+- `wordpress-agent-kit-agent.tar.gz`
+- `wordpress-agent-kit-cursor.tar.gz`
+
 ### Run Tests
 
 ```bash
 pnpm test
-```
-
-### Build Release
-
-To create a distribution archive:
-
-```bash
-pnpm build:release
 ```
 
 ## Customization
