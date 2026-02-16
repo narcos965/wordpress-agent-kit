@@ -2,6 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PACKAGE_ROOT } from '../utils/paths.js';
 
+/**
+ * Installs the WordPress Agent Kit into the specified directory.
+ * Copies the .github directory and AGENTS.md template.
+ *
+ * @param {string} targetDir - The directory where the kit should be installed.
+ * @returns {Promise<void>}
+ */
 export async function installKit(targetDir: string) {
     console.log(`Installing WordPress Agent Kit into: ${targetDir}`);
 

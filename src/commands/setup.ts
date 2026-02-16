@@ -7,6 +7,10 @@ import { PACKAGE_ROOT } from '../utils/paths.js';
 import { installKit } from '../lib/installer.js';
 import { mapProjectType, mapTechStack, hasConfidentDetection, formatDetectionResults } from '../lib/triage-mapper.js';
 
+/**
+ * Command to interactively set up the WordPress Agent Kit.
+ * Handles detection of project type, installation, and configuration of AGENTS.md.
+ */
 export const setupCommand = new Command('setup')
   .description('Interactive setup for WordPress Agent Kit')
   .argument('[dir]', 'Target directory', process.cwd())

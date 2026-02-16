@@ -2,6 +2,10 @@ import { Command } from 'commander';
 import path from 'node:path';
 import { installKit } from '../lib/installer.js';
 
+/**
+ * Command to install the WordPress Agent Kit into a target directory.
+ * Takes an optional directory argument, defaulting to the current working directory.
+ */
 export const installCommand = new Command('install')
   .description('Install the WordPress Agent Kit into a target directory')
   .argument('[dir]', 'Target directory to install into', process.cwd())

@@ -3,6 +3,10 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PACKAGE_ROOT } from '../utils/paths.js';
 
+/**
+ * Command to run a local WordPress Playground instance.
+ * Uses the blueprint located in the playground directory.
+ */
 export const runPlaygroundCommand = new Command('playground')
   .description('Run local WordPress Playground')
   .action(() => {

@@ -6,6 +6,10 @@ import { run } from '../utils/run.js';
 const OFFICIAL_SKILLS_REPO_URL = 'https://github.com/WordPress/agent-skills.git';
 const DEFAULT_SKILLS_REF = 'trunk';
 
+/**
+ * Command to sync skills from the official WordPress agent-skills repository.
+ * Can checkout a specific branch or tag.
+ */
 export const syncSkillsCommand = new Command('sync-skills')
   .description('Sync skills from the official WordPress agent-skills repository')
   .argument('[ref]', 'Branch or tag to checkout', DEFAULT_SKILLS_REF)
