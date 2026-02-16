@@ -12,4 +12,10 @@ describe('installCommand', () => {
     expect(installCommand.description()).toContain('Install');
     expect(installCommand.arguments).toBeDefined();
   });
+
+  it('should have an argument for directory', () => {
+    const args = installCommand.registeredArguments;
+    expect(args).toHaveLength(1);
+    expect(args[0].name()).toBe('dir');
+  });
 });
