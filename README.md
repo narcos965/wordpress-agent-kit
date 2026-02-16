@@ -111,3 +111,8 @@ pnpm test
 2. Run WordPress project triage (via `wp-project-triage` skill) to generate tailored instructions.
 3. Update `.github/instructions/wordpress-workflow.instructions.md` with your workflow.
 4. Keep prompts in `.github/prompts/` accurate for your plugin/theme.
+
+## Credits
+
+- **[AGENTS.md](https://agentskills.io)** - The agent configuration standard.
+- **[AgentSkills.io](https://agentskills.io)** - The open directory of agent skills.
