@@ -1,31 +1,39 @@
-# Project: WordPress Codebase
+# Project: WordPress Agent Kit (CLI)
 
-This repository is WordPress-centric (plugin, theme, or site). Agents should prioritize local skills and official WordPress standards.
+This is a Node.js CLI tool (`wp-agent-kit`) designed to scaffold AI agent configuration for WordPress projects. It helps developers quickly set up `AGENTS.md` and `.github` skills/instructions in their repositories.
 
-## Onboarding
+## Tech Stack
+- **Language**: TypeScript (Node.js)
+- **Framework**: Commander.js
+- **Prompting**: `@clack/prompts`
+- **Build**: `tsc` (TypeScript Compiler)
+- **Test**: `vitest`
 
-- Core agent: `.github/agents/wp-architect.agent.md`
-- Workflow: `.github/instructions/wordpress-workflow.instructions.md`
-- Skills live in: `.github/skills/`
+## Architecture
+- **Entry Point**: `src/cli.ts`
+- **Commands**: `src/commands/*.ts` (e.g., `install`, `setup`, `sync-skills`, `playground`)
+- **Core Logic**: `src/lib/*.ts` (e.g., `installer.ts` for file copying, `triage-mapper.ts` for project detection)
+- **Utilities**: `src/utils/*.ts` (e.g., `paths.ts`, `run.ts`)
+- **Assets**: 
+  - `AGENTS.template.md`: The template file copied to user projects.
+  - `.github/`: The source of skills and instructions copied to user projects.
+  - `vendor/wp-agent-skills/`: Submodule containing upstream skills.
 
-## Project Discovery (required before changes)
+## Development Workflow
+- **Run locally**: `npm run dev` (uses `tsx src/cli.ts`)
+- **Build**: `npm run build` (outputs to `dist/`)
+- **Test**: `npm test` (runs Vitest)
+- **Lint**: `npm run lint`
 
-1. Run project triage:
-   - `node .github/skills/wp-project-triage/scripts/detect_wp_project.mjs`
-2. If routing is unclear, use the router decision tree:
-   - `.github/skills/wordpress-router/references/decision-tree.md`
-3. Update repo-specific guidance:
-   - Choose the project prefix based on existing code (functions/classes/constants).
-   - Confirm folder structure (single-file plugin vs `includes/`, blocks, theme, full site).
-   - Confirm target WordPress/PHP versions if relevant.
+## Key Commands
+- `install`: Copies `.github` and `AGENTS.md` template to a target directory.
+- `setup`: Interactive wizard that detects project type and configures the kit.
+- `sync-skills`: Pulls skills from `WordPress/agent-skills` into `.github/skills`.
+- `playground`: Launches a local WordPress Playground instance using a blueprint.
+- `build-release`: Packages the CLI for release.
 
-## Security Baseline
-
-- Sanitize input early, escape output late.
-- Use nonces for state-changing requests.
-- Enforce capabilities for privileged actions.
-
-## Output Requirements
-
-- Prefer minimal, standards-compliant changes.
-- Follow existing conventions in the codebase.
+## Notes for Agents
+- When modifying commands, ensure you update the corresponding JSDoc comments.
+- The `src/lib/installer.ts` file is critical as it handles the file copying logic.
+- The `src/lib/triage-mapper.ts` file contains logic for mapping project detection results to configuration options.
+- The `vendor` directory is gitignored and populated via submodule or script.
